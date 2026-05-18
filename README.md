@@ -13,12 +13,12 @@ Understood the core building blocks of n8n workflows including:
 
 ## Workflow Architecture
 
-![Workflow](workflow.png)
+![Workflow](Workflow.png)
 
 ## AI Chat Execution
 
-![Chat](chat.png)
+![Chat](Chat.png)
 
 ## Google Sheets Storage
 
-![Sheet](sheet.png)
+![Sheet](Sheet.png)
