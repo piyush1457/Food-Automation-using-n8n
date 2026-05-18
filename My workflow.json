@@ -1,0 +1,188 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        272,
+        16
+      ],
+      "id": "b3216cd9-0cb1-4a45-bd01-beac808782cb",
+      "name": "When chat message received",
+      "webhookId": "b4d2a881-58f8-4ac6-b87b-9c13e38860bf"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a food ordering assistant.\n\nExtract:\n- customer name\n- food item\n- quantity\n\nThen return the response ONLY in JSON format.\n\nFormat:\n{\n  \"Customer Name\": \"\",\n  \"Food Item\": \"\",\n  \"Quantity\": \"\",\n  \"Status\": \"Confirmed\"\n}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        496,
+        16
+      ],
+      "id": "fbca1ef3-c999-44e9-9919-ca62fb16d7d4",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        512,
+        240
+      ],
+      "id": "f42b7a41-a89e-4a15-a6ec-9c27b384da9e",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "BbM9srujk4KD60W0",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1r-sIOwo5dD1gAx6lfKQV_Ep8X8Nnq3VCq8Wl2zsK4_8",
+          "mode": "list",
+          "cachedResultName": "VTU",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1r-sIOwo5dD1gAx6lfKQV_Ep8X8Nnq3VCq8Wl2zsK4_8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1r-sIOwo5dD1gAx6lfKQV_Ep8X8Nnq3VCq8Wl2zsK4_8/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Customer Name": "={{ JSON.parse($json.output)[\"Customer Name\"] }}",
+            "Food Item": "={{ JSON.parse($json.output)[\"Food Item\"] }}",
+            "Quantity": "={{ JSON.parse($json.output)[\"Quantity\"] }}",
+            "Status": "={{ JSON.parse($json.output)[\"Status\"] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Customer Name",
+              "displayName": "Customer Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Food Item",
+              "displayName": "Food Item",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Quantity",
+              "displayName": "Quantity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        848,
+        16
+      ],
+      "id": "0709bb6a-a706-4213-8f11-ed8ddb6ad61a",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jA1wUywJc4ZAbBFr",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "352e4526-aef4-4383-bf31-a828ebf7a320",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b36f8aaac0a587072a3b7086e149d198eeafb4110c7ab07bdab3e6a1f215a030"
+  },
+  "id": "WlldsR3WZWtJYYWK",
+  "tags": []
+}
